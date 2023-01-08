@@ -10,9 +10,12 @@ pico_sdk_init()
 
 add_executable(pico-imu
         main.c
+        mpu9250.c
+        mpu9250.h
+        mpu9250_regs.h
         )
 
-target_link_libraries(pico-imu pico_stdlib)
+target_link_libraries(pico-imu pico_stdlib hardware_spi)
 
 pico_enable_stdio_usb(pico-imu 1)
 pico_enable_stdio_uart(pico-imu 0)
