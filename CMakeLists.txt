@@ -14,4 +14,6 @@ add_executable(pico-imu
 
 target_link_libraries(pico-imu pico_stdlib)
 
+pico_enable_stdio_usb(pico-imu 1)
+pico_enable_stdio_uart(pico-imu 0)
 pico_add_extra_outputs(pico-imu)
