@@ -19,4 +19,4 @@ void mpu_read_acc_raw(struct mpu9250 *chip, int16_t acc[3]);
 void mpu_read_gyro_raw(struct mpu9250 *chip, int16_t gyro[3]);
 int mpu_get_temperature(struct mpu9250 *chip);
 
-#endif
+#endif // MPU9250_H

@@ -19,4 +19,4 @@
 
 #define MPU_9250_READ_BIT   0x80
 
-#endif
+#endif // MPU9250_REGS_H
