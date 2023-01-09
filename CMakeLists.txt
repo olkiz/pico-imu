@@ -8,12 +8,13 @@ project(pico-imu)
 
 pico_sdk_init()
 
-add_executable(pico-imu
-        main.c
-        mpu9250.c
-        mpu9250.h
-        mpu9250_regs.h
-        )
+include(src/SourcesList.cmake)
+
+add_executable(pico-imu ${PICO_IMU_SOURCES})
+
+target_include_directories(pico-imu PRIVATE
+  src
+)
 
 target_link_libraries(pico-imu pico_stdlib hardware_spi)
 
