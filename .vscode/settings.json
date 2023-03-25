@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "mpu9250.h": "c",
-        "mpu9250_regs.h": "c"
+        "mpu9250_regs.h": "c",
+        "quaternion.h": "c",
+        "stdint.h": "c",
+        "random": "c",
+        "*.tcc": "c",
+        "compare": "c"
     }
 }

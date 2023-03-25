@@ -66,6 +66,15 @@ void mpu_read_gyro_raw(struct mpu9250 *chip, int16_t gyro[3])
     }
 }
 
+void mpu_read_gyro_rad_per_sec(struct mpu9250 *chip, double gyro[3])
+{
+    int16_t gyro_raw[3];
+    mpu_read_gyro_raw(chip, gyro_raw);
+    gyro[0] = gyro_raw[0] * 0.000133061;
+    gyro[1] = gyro_raw[1] * 0.000133061;
+    gyro[2] = gyro_raw[2] * 0.000133061;
+}
+
 int mpu_get_temperature(struct mpu9250 *chip)
 {
     uint8_t buf[2];

@@ -1,9 +1,9 @@
 #ifndef EULER_ANGLE_H
 #define EULER_ANGLE_H
 
-struct EulerAngle
+struct euler_angles
 {
-    float Yaw, Pitch, Roll;
+    float yaw, pitch, roll;
 };
 
 #endif // EULER_ANGLE_H

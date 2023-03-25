@@ -1,5 +1,7 @@
 set(PICO_IMU_SOURCES
-    src/eulerAngle.h
+    src/euler_angles.h
+    src/imu.h
+    src/imu.c
     src/main.c
     src/mpu9250_regs.h
     src/mpu9250.c
