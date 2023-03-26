@@ -23,11 +23,11 @@ int main()
 
     mpu_init(&imu);
 
-    mpu_reset(&imu);
-
     stdio_init_all();
     
-    int16_t acc[3], temperature;
+    int16_t temperature;
+    int16_t acc[3];
+    int16_t mag[3];
 
     double gyro[3];
 
@@ -43,6 +43,7 @@ int main()
         prev_time = current_time;
         mpu_read_acc_raw(&imu, acc);
         mpu_read_gyro_rad_per_sec(&imu, gyro);
+        mpu_read_mag_raw(&imu, mag);
         temperature = mpu_get_temperature(&imu);
         struct quaternion quaternion_from_gyro = compute_quaternion_from_gyro(gyro, dt);
         location = mul_quaternion(&location, &quaternion_from_gyro);
@@ -50,9 +51,10 @@ int main()
 
         angles = quaternion_to_euler_angles(&location);
 
-        printf("gyro: %f, %f, %f, angles = %f, %f, %f, q = %f, %f, %f, %f\n",
+        printf("gyro: %f, %f, %f, angles = %f, %f, %f, mag = %d, %d, %d, cal = %d, %d, %d\n",
                gyro[0] * RAD_TO_DEG, gyro[1] * RAD_TO_DEG, gyro[2] * RAD_TO_DEG, 
                angles.pitch * RAD_TO_DEG, angles.roll * RAD_TO_DEG, angles.yaw * RAD_TO_DEG, 
-               location.a, location.x, location.y, location.z);
+               mag[0], mag[1], mag[2],
+               imu.calibration_data[0], imu.calibration_data[1], imu.calibration_data[2]);
     }
 }
