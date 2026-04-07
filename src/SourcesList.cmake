@@ -1,12 +1,12 @@
 set(PICO_IMU_SOURCES
     src/euler_angles.h
-    src/imu.h
-    src/imu.c
-    src/main.c
+    src/IMU.h
+    src/IMU.cpp
+    src/main.cpp
     src/mpu9250_regs.h
-    src/mpu9250.c
-    src/mpu9250.h
-    src/quaternion.c
-    src/quaternion.h
+    src/MPU9250.cpp
+    src/MPU9250.h
+    src/Quaternion.cpp
+    src/Quaternion.h
     src/vector.h
 )
