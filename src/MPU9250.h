@@ -12,6 +12,13 @@ public:
         GYRO_SCALE_2000DPS
     };
 
+    enum ACCELEROMETER_SCALE {
+        ACCELEROMETER_SCALE_2G,
+        ACCELEROMETER_SCALE_4G,
+        ACCELEROMETER_SCALE_8G,
+        ACCELEROMETER_SCALE_16G
+    };
+
     MPU9250(spi_inst_t *spi_port, int cs_pin);
 
     void reset();
@@ -22,6 +29,8 @@ public:
     void readAccelerometer(double acceleration[3]);
 
     void setGyroScale(GYRO_SCALE scale);
+    void setAccelerometerScale(ACCELEROMETER_SCALE scale);
+
 
     int temperature();
 
@@ -43,6 +52,7 @@ private:
     int m_CSPin;
 
     GYRO_SCALE m_CurrentGyroScale;
+    ACCELEROMETER_SCALE m_CurrentAccScale;
 };
 
 #endif // MPU9250_H

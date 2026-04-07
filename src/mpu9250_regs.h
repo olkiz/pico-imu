@@ -23,7 +23,9 @@
 
 #define GYRO_XOUT_H                     0x43
 
-#define GYRO_FS_SEL                     0x1B
+#define GYRO_CONFIG                     0x1B
+
+#define ACCEL_CONFIG                    0x1C
 
 #define EXT_SENS_DATA_00                0x49
 

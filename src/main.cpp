@@ -25,6 +25,7 @@ int main()
     auto mpu9250 = MPU9250(spi0, CS_PIN);
 
     mpu9250.setGyroScale(MPU9250::GYRO_SCALE_250DPS);
+    mpu9250.setAccelerometerScale(MPU9250::ACCELEROMETER_SCALE_2G);
 
     stdio_init_all();
     

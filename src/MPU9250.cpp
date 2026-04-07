@@ -3,6 +3,12 @@
 
 #include "pico/stdlib.h"
 
+namespace
+{
+    constexpr double G = 9.81;
+} // namespace
+
+
 MPU9250::MPU9250(spi_inst_t *spi_port, int cs_pin):
     m_pSpiPort{spi_port},
     m_CSPin{cs_pin}
@@ -19,11 +25,13 @@ MPU9250::MPU9250(spi_inst_t *spi_port, int cs_pin):
 
     magInit(MAG_16_BIT_SCALE, MAG_100HZ_MODE);
     setGyroScale(GYRO_SCALE_250DPS);
+    setAccelerometerScale(ACCELEROMETER_SCALE_2G);
 }
 
 void MPU9250::readGyro(double gyroRads[3])
 {
     double coef = 1.0;
+
     switch (m_CurrentGyroScale)
     {
     case GYRO_SCALE_250DPS:
@@ -42,6 +50,7 @@ void MPU9250::readGyro(double gyroRads[3])
     default:
         break;
     }
+
     int16_t gyro_raw[3];
     readGyroRaw(gyro_raw);
     gyroRads[0] = gyro_raw[0] * 0.000133061;
@@ -52,11 +61,34 @@ void MPU9250::readGyro(double gyroRads[3])
 
 void MPU9250::readAccelerometer(double acceleration[3])
 {
+    double coef = 1.0;
+
+    switch (m_CurrentAccScale)
+    {
+    case ACCELEROMETER_SCALE_2G:
+        coef = 0.000061035;
+        break;
+    case ACCELEROMETER_SCALE_4G:
+        coef = 0.00012207;
+        break;
+    case ACCELEROMETER_SCALE_8G:
+        coef = 0.000244141;
+        break;
+    case ACCELEROMETER_SCALE_16G:
+        coef = 0.000488281;
+        break;
+
+    default:
+        break;
+    }
+
+    coef *= G;
+
     int16_t acceleration_raw[3];
     readAccelerometerRaw(acceleration_raw);
-    acceleration[0] = acceleration_raw[0] / 16384.0 * 9.80665;
-    acceleration[1] = acceleration_raw[1] / 16384.0 * 9.80665;
-    acceleration[2] = acceleration_raw[2] / 16384.0 * 9.80665;
+    acceleration[0] = acceleration_raw[0] * coef;
+    acceleration[1] = acceleration_raw[1] * coef;
+    acceleration[2] = acceleration_raw[2] * coef;
 }
 
 void MPU9250::setGyroScale(GYRO_SCALE scale)
@@ -89,7 +121,40 @@ void MPU9250::setGyroScale(GYRO_SCALE scale)
     default:
         break;
     }
-    write(GYRO_FS_SEL, registerByteValue);
+    write(GYRO_CONFIG, registerByteValue);
+}
+
+void MPU9250::setAccelerometerScale(ACCELEROMETER_SCALE scale)
+{
+    if (m_CurrentAccScale == scale)
+    {
+        return;
+    }
+
+    uint8_t registerByteValue;
+    read(EXT_SENS_DATA_00, &registerByteValue, 1);
+
+    m_CurrentAccScale = scale;
+
+    switch (scale)
+    {
+    case ACCELEROMETER_SCALE_2G:
+        registerByteValue |= 0b00000000;
+        break;
+    case ACCELEROMETER_SCALE_4G:
+        registerByteValue |= 0b00001000;
+        break;
+    case ACCELEROMETER_SCALE_8G:
+        registerByteValue |= 0b00010000;
+        break;
+    case ACCELEROMETER_SCALE_16G:
+        registerByteValue |= 0b00011000;
+        break;
+
+    default:
+        break;
+    }
+    write(ACCEL_CONFIG, registerByteValue);
 }
 
 void MPU9250::readAccelerometerRaw(int16_t acceleration[3])
