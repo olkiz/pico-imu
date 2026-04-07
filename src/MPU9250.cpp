@@ -18,10 +18,30 @@ MPU9250::MPU9250(spi_inst_t *spi_port, int cs_pin):
     sleep_ms(200);
 
     magInit(MAG_16_BIT_SCALE, MAG_100HZ_MODE);
+    setGyroScale(GYRO_SCALE_250DPS);
 }
 
 void MPU9250::readGyro(double gyroRads[3])
 {
+    double coef = 1.0;
+    switch (m_CurrentGyroScale)
+    {
+    case GYRO_SCALE_250DPS:
+        coef = 0.000133231;
+        break;
+    case GYRO_SCALE_500DPS:
+        coef = 0.000266462;
+        break;
+    case GYRO_SCALE_1000DPS:
+        coef = 0.000532113;
+        break;
+    case GYRO_SCALE_2000DPS:
+        coef = 0.001064225;
+        break;
+
+    default:
+        break;
+    }
     int16_t gyro_raw[3];
     readGyroRaw(gyro_raw);
     gyroRads[0] = gyro_raw[0] * 0.000133061;
@@ -37,6 +57,39 @@ void MPU9250::readAccelerometer(double acceleration[3])
     acceleration[0] = acceleration_raw[0] / 16384.0 * 9.80665;
     acceleration[1] = acceleration_raw[1] / 16384.0 * 9.80665;
     acceleration[2] = acceleration_raw[2] / 16384.0 * 9.80665;
+}
+
+void MPU9250::setGyroScale(GYRO_SCALE scale)
+{
+    if (m_CurrentGyroScale == scale)
+    {
+        return;
+    }
+
+    uint8_t registerByteValue;
+    read(EXT_SENS_DATA_00, &registerByteValue, 1);
+
+    m_CurrentGyroScale = scale;
+
+    switch (scale)
+    {
+    case GYRO_SCALE_250DPS:
+        registerByteValue |= 0b00000000;
+        break;
+    case GYRO_SCALE_500DPS:
+        registerByteValue |= 0b00001000;
+        break;
+    case GYRO_SCALE_1000DPS:
+        registerByteValue |= 0b00010000;
+        break;
+    case GYRO_SCALE_2000DPS:
+        registerByteValue |= 0b00011000;
+        break;
+
+    default:
+        break;
+    }
+    write(GYRO_FS_SEL, registerByteValue);
 }
 
 void MPU9250::readAccelerometerRaw(int16_t acceleration[3])

@@ -5,6 +5,13 @@
 
 class MPU9250 {
 public:
+    enum GYRO_SCALE {
+        GYRO_SCALE_250DPS,
+        GYRO_SCALE_500DPS,
+        GYRO_SCALE_1000DPS,
+        GYRO_SCALE_2000DPS
+    };
+
     MPU9250(spi_inst_t *spi_port, int cs_pin);
 
     void reset();
@@ -13,6 +20,8 @@ public:
 
     void readGyro(double gyro[3]);
     void readAccelerometer(double acceleration[3]);
+
+    void setGyroScale(GYRO_SCALE scale);
 
     int temperature();
 
@@ -32,6 +41,8 @@ private:
 
     spi_inst_t *m_pSpiPort;
     int m_CSPin;
+
+    GYRO_SCALE m_CurrentGyroScale;
 };
 
 #endif // MPU9250_H

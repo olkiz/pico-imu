@@ -23,6 +23,8 @@
 
 #define GYRO_XOUT_H                     0x43
 
+#define GYRO_FS_SEL                     0x1B
+
 #define EXT_SENS_DATA_00                0x49
 
 #define USER_CTRL                       0x6A

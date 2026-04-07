@@ -24,6 +24,8 @@ int main()
 
     auto mpu9250 = MPU9250(spi0, CS_PIN);
 
+    mpu9250.setGyroScale(MPU9250::GYRO_SCALE_250DPS);
+
     stdio_init_all();
     
     int16_t temperature;
